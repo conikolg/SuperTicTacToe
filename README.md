@@ -9,7 +9,7 @@ should be a fun, diverse, and complicated learning experience.
 I have a checklist, that I loosely plan to complete in the following order:
 
 - [ ] Make a working 3x3x3x3 grid as required by the game without making
-the code look to ugly with 4d indexing all over the place.
+the code look too ugly with 4d indexing all over the place.
 
 - [ ] When one of the subgames has won, that board displays as a giant X or O,
 rather than the actual contents of the board.
