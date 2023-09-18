@@ -9,7 +9,9 @@ func main() {
 
 	game.set(1, 1, 0, 0, 'O')
 	game.set(1, 1, 1, 1, 'X')
-	game.set(1, 1, 2, 2, 'O')
-	game.set(2, 2, 0, 0, 'X')
-	fmt.Println(game)
+	game.arr[0][0].winner = 'X'
+	game.arr[1][0].winner = 'O'
+	// game.set(1, 1, 2, 2, 'O')
+	// game.set(2, 2, 0, 0, 'X')
+	fmt.Print(game)
 }

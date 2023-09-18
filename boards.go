@@ -19,7 +19,7 @@ func NewBoard() Board {
 	for i := 0; i < 3; i++ {
 		a[i] = make([]rune, 3)
 		for j := 0; j < 3; j++ {
-			a[i][j] = ' '
+			a[i][j] = '·'
 		}
 	}
 
@@ -31,9 +31,16 @@ func NewBoard() Board {
 
 // toString method for Board struct
 func (b Board) String() string {
+	switch b.winner {
+	case 'X':
+		return "\\ /\n X \n/ \\"
+	case 'O':
+		return "/‾\\\n| |\n\\_/"
+	}
+
 	var str string
 	for i := 0; i < len(b.arr); i++ {
-		str += fmt.Sprint(b.arr[i], '\n')
+		str += strings.Trim(string(b.arr[i]), "[]") + "\n"
 	}
 	str = str[:len(str)-1]
 
@@ -82,25 +89,28 @@ func (b SuperBoard) String() string {
 	var sb strings.Builder
 
 	for sri := 0; sri < 3; sri++ {
+		var repr [][]string
+		for sci := 0; sci < 3; sci++ {
+			miniboard := b.arr[sri][sci].String()
+			repr = append(repr, strings.Split(miniboard, "\n"))
+		}
 		for ri := 0; ri < 3; ri++ {
 			for sci := 0; sci < 3; sci++ {
-				s := string(b.arr[sri][sci].arr[ri])
-				s = strings.Trim(s, "[]")
-				sb.WriteString(s)
-				if sci < 2 {
+				sb.WriteString(repr[sci][ri])
+				if sci != 2 {
 					sb.WriteString(" | ")
+				} else {
+					sb.WriteRune('\n')
 				}
 			}
-			if ri < 2 {
-				sb.WriteRune('\n')
-			}
 		}
+
 		if sri < 2 {
-			sb.WriteString("\n" + strings.Repeat("-", 15) + "\n")
+			sb.WriteString(strings.Repeat("—", 15) + "\n")
 		}
 	}
 
-	return sb.String()
+	return sb.String()[:sb.Len()-1]
 }
 
 func (b SuperBoard) set(i, j, k, l int, marker rune) {
