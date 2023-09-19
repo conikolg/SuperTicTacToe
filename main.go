@@ -12,7 +12,7 @@ func main() {
 	var allowed_square int = -1
 	var row, col int
 
-	for game.winner == 0 {
+	for game.GetWinner() == 0 {
 		if p1turn {
 			// let player make a move
 			fmt.Println(game)
@@ -33,6 +33,7 @@ func main() {
 		}
 
 		// compute where the next person may go
+		game.ComputeWinner()
 		next_allowed_square := RowColToNextBoardIdx(row, col)
 		if game.GetBoard(next_allowed_square).winner != 0 {
 			allowed_square = -1
