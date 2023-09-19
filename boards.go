@@ -9,6 +9,8 @@ import (
 defines the Board "class", utils for operations dealing with
 just a single, simple, TicTacToe board.
 */
+const EMPTY rune = '·'
+
 type Board struct {
 	arr    [][]rune
 	winner rune
@@ -19,7 +21,7 @@ func NewBoard() Board {
 	for i := 0; i < 3; i++ {
 		a[i] = make([]rune, 3)
 		for j := 0; j < 3; j++ {
-			a[i][j] = '·'
+			a[i][j] = EMPTY
 		}
 	}
 
@@ -56,8 +58,12 @@ func (b Board) computeWinner() rune {
 	return b.getWinner()
 }
 
-func (b Board) set(i, j int, marker rune) {
-	b.arr[i][j] = marker
+func (b Board) set(i, j int, marker rune) bool {
+	if b.arr[i][j] == EMPTY {
+		b.arr[i][j] = marker
+		return true
+	}
+	return false
 }
 
 func (b Board) get(i, j int) rune {
@@ -89,6 +95,7 @@ func NewSuperBoard() SuperBoard {
 func (b SuperBoard) String() string {
 	var sb strings.Builder
 
+	sb.WriteString("  1-3   4-6   7-9\n")
 	for sri := 0; sri < 3; sri++ {
 		var repr [][]string
 		for sci := 0; sci < 3; sci++ {
@@ -96,6 +103,8 @@ func (b SuperBoard) String() string {
 			repr = append(repr, strings.Split(miniboard, "\n"))
 		}
 		for ri := 0; ri < 3; ri++ {
+			sb.WriteRune(rune('a' + sri*3 + ri))
+			sb.WriteRune(' ')
 			for sci := 0; sci < 3; sci++ {
 				sb.WriteString(repr[sci][ri])
 				if sci != 2 {
@@ -107,22 +116,26 @@ func (b SuperBoard) String() string {
 		}
 
 		if sri < 2 {
-			sb.WriteString(strings.Repeat("—", 15) + "\n")
+			sb.WriteString("  " + strings.Repeat("—", 15) + "\n")
 		}
 	}
 
 	return sb.String()[:sb.Len()-1]
 }
 
-func (b SuperBoard) set(i, j, k, l int, marker rune) {
-	b.arr[i][j].set(k, l, marker)
+func (b SuperBoard) set(i, j, k, l int, marker rune) bool {
+	return b.arr[i][j].set(k, l, marker)
 }
 
-func (b SuperBoard) Set(row, col int, marker rune) {
+func (b SuperBoard) Set(row, col int, marker rune) bool {
 	i, j, k, l := row/3, col/3, row%3, col%3
-	b.set(i, j, k, l, marker)
+	return b.set(i, j, k, l, marker)
 }
 
 func (b SuperBoard) get(i, j, k, l int) rune {
 	return b.arr[i][j].get(k, l)
+}
+
+func (b SuperBoard) GetBoard(i int) Board {
+	return b.arr[i/3][i%3]
 }
