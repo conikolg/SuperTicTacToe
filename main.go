@@ -10,27 +10,37 @@ func main() {
 	var game SuperBoard = NewSuperBoard()
 	var p1turn bool = true
 	var allowed_square int = -1
+	var row, col int
 
 	for game.winner == 0 {
 		if p1turn {
+			// let player make a move
 			fmt.Println(game)
-			row, col := DoUserMove(game, allowed_square)
-
-			// compute where the next person may go
-			next_allowed_square := RowColToNextBoardIdx(row, col)
-			if game.GetBoard(next_allowed_square).winner != 0 {
-				allowed_square = -1
-			} else {
-				allowed_square = next_allowed_square
-			}
+			row, col = DoUserMove(game, allowed_square)
 		} else {
+			// Compute possible move for computer
 			fmt.Println("The computer is choosing a location...")
-			row := rand.Intn(9)
-			col := rand.Intn(9)
-			fmt.Printf("Computer chose row=%d col=%d \n", row, col)
-			game.Set(int(row), int(col), 'O')
+			minRow, minCol := allowed_square/3*3, allowed_square%3*3
+			row = rand.Intn(3) + minRow
+			col = rand.Intn(3) + minCol
+
+			// Retry making the move as needed
+			for !game.Set(row, col, 'O') {
+				row = rand.Intn(3) + minRow
+				col = rand.Intn(3) + minCol
+			}
+			fmt.Printf("Computer chose row=%d col=%d.\n", row, col)
 		}
 
+		// compute where the next person may go
+		next_allowed_square := RowColToNextBoardIdx(row, col)
+		if game.GetBoard(next_allowed_square).winner != 0 {
+			allowed_square = -1
+		} else {
+			allowed_square = next_allowed_square
+		}
+
+		// swap turns
 		p1turn = !p1turn
 	}
 }
