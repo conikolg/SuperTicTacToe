@@ -14,7 +14,7 @@ the code look too ugly with 4d indexing all over the place.
 - [x] When one of the subgames has won, that board displays as a giant X or O,
 rather than the actual contents of the board.
 
-- [ ] Create a player/computer turn-based input loop. The computer AI will be 
+- [x] Create a player/computer turn-based input loop. The computer AI will be 
 random choosing locations. All this is text/console based.
 
 - [ ] Both parties must conform to the rules of the game, restricting the possible

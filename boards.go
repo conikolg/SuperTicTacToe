@@ -69,7 +69,8 @@ defines the SuperBoard "class", utils for operations dealing with
 the entire 3x3 grid of smaller TicTacToe boards.
 */
 type SuperBoard struct {
-	arr [][]Board
+	arr    [][]Board
+	winner rune
 }
 
 func NewSuperBoard() SuperBoard {
@@ -115,6 +116,11 @@ func (b SuperBoard) String() string {
 
 func (b SuperBoard) set(i, j, k, l int, marker rune) {
 	b.arr[i][j].set(k, l, marker)
+}
+
+func (b SuperBoard) Set(row, col int, marker rune) {
+	i, j, k, l := row/3, col/3, row%3, col%3
+	b.set(i, j, k, l, marker)
 }
 
 func (b SuperBoard) get(i, j, k, l int) rune {
