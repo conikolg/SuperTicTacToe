@@ -55,6 +55,18 @@ func main() {
 		// swap turns
 		p1turn = !p1turn
 	}
+
+	fmt.Print("\033[H\033[2J")
+	fmt.Println(game)
+	fmt.Println()
+	switch game.winner {
+	case 'X':
+		fmt.Println("Congratulations! You won!")
+	case 'O':
+		fmt.Println("Congratulations! You lost to a bot that picks randomly!!!")
+	default:
+		fmt.Println("It's a stalemate!")
+	}
 }
 
 func RowColToNextBoardIdx(row, col int) int {
@@ -107,14 +119,22 @@ func DoUserMove(game *SuperBoard, allowed_square int) (int, int) {
 		var col int = int(loc[1] - '1')
 
 		// error if not in the right square
+		square := RowColToCurrentBoardIdx(row, col)
 		if allowed_square != -1 {
-			square := RowColToCurrentBoardIdx(row, col)
 			if square != allowed_square {
 				fmt.Printf("That is in square #%d. Please choose a location in square #%d.\n", square+1, allowed_square+1)
 				fmt.Print("Please enter a location (a1-i9): ")
 				fmt.Scan(&loc)
 				continue
 			}
+		}
+
+		// must have chosen a square that is still in play
+		if game.GetBoard(square).winner != 0 {
+			fmt.Printf("Square #%d has already been completed, you cannot make any more moves there.", square+1)
+			fmt.Print("Please enter a location (a1-i9): ")
+			fmt.Scan(&loc)
+			continue
 		}
 
 		// must have chosen an empty location
