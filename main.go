@@ -16,20 +16,31 @@ func main() {
 		if p1turn {
 			// let player make a move
 			fmt.Println(game)
-			row, col = DoUserMove(game, allowed_square)
+			row, col = DoUserMove(&game, allowed_square)
 		} else {
-			// Compute possible move for computer
 			fmt.Println("The computer is choosing a location...")
+
+			// Pick an available square, if needed
+			for allowed_square == -1 {
+				square := rand.Intn(9)
+				if game.GetBoard(square).winner == 0 {
+					allowed_square = square
+				}
+			}
+
+			// Pick a space in the square
 			minRow, minCol := allowed_square/3*3, allowed_square%3*3
 			row = rand.Intn(3) + minRow
 			col = rand.Intn(3) + minCol
-
-			// Retry making the move as needed
+			// Retry as needed
 			for !game.Set(row, col, 'O') {
 				row = rand.Intn(3) + minRow
 				col = rand.Intn(3) + minCol
 			}
-			fmt.Printf("Computer chose row=%d col=%d.\n", row, col)
+
+			// Clear screen
+			fmt.Print("\033[H\033[2J")
+			fmt.Printf("Computer chose %c%c.\n", row+'a', col+'1')
 		}
 
 		// compute where the next person may go
@@ -54,7 +65,7 @@ func RowColToCurrentBoardIdx(row, col int) int {
 	return row/3*3 + col/3
 }
 
-func DoUserMove(game SuperBoard, allowed_square int) (int, int) {
+func DoUserMove(game *SuperBoard, allowed_square int) (int, int) {
 	var loc string
 
 	// Informational prompt conditional on next active square
@@ -70,7 +81,7 @@ func DoUserMove(game SuperBoard, allowed_square int) (int, int) {
 
 	for {
 		// error if not specified in valid format
-		if len(loc) != 2 || loc[0] < 'a' || loc[0] > 'z' || loc[1] < '1' || loc[1] > '9' {
+		if len(loc) != 2 || loc[0] < 'a' || loc[0] > 'i' || loc[1] < '1' || loc[1] > '9' {
 			fmt.Print("Invalid location given. Please enter a location (a1-i9): ")
 			fmt.Scan(&loc)
 			continue
