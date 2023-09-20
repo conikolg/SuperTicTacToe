@@ -17,11 +17,11 @@ rather than the actual contents of the board.
 - [x] Create a player/computer turn-based input loop. The computer AI will be 
 random choosing locations. All this is text/console based.
 
-- [ ] Both parties must conform to the rules of the game, restricting the possible
+- [x] Both parties must conform to the rules of the game, restricting the possible
 moves they can make in many situations. Terminate the game when someone wins. 
 
-- [ ] Transform this into an otherwise equivalent client/server HTTP API based design.
+- [ ] Implement a smarter AI (minimax, alpha-beta pruning, and/or dynamic programming).
 
-- [ ] Implement a smarter AI.
+- [ ] Transform this into an otherwise equivalent client/server HTTP API based design.
 
 - [ ] Create a graphical frontend.
