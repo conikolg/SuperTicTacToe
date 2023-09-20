@@ -70,19 +70,34 @@ func DoUserMove(game *SuperBoard, allowed_square int) (int, int) {
 
 	// Informational prompt conditional on next active square
 	if allowed_square == -1 {
-		fmt.Println("You may choose any section of the board for your next move.")
+		fmt.Println("You may play in any section of the board for your next move.")
 	} else {
-		fmt.Printf("You must choose a location in square #%d for your next move. \n", allowed_square+1)
+		fmt.Printf("You must play in square #%d for your next move. \n", allowed_square+1)
 	}
+
+	// Compute user-friendly locations
+	var minRow, minCol, maxRow, maxCol int
+	if allowed_square != -1 {
+		minRow, minCol = allowed_square/3*3, allowed_square%3*3
+		maxRow, maxCol = minRow+2, minCol+2
+	} else {
+		minRow, minCol = 0, 0
+		maxRow, maxCol = 8, 8
+	}
+	minRow += 'a'
+	minCol += '1'
+	maxRow += 'a'
+	maxCol += '1'
+
 	// get choice
-	fmt.Print("Enter a location (a1-i9): ")
+	fmt.Printf("Enter a location (%c%c-%c%c): ", minRow, minCol, maxRow, maxCol)
 	fmt.Scan(&loc)
 	loc = strings.ToLower(loc)
 
 	for {
 		// error if not specified in valid format
 		if len(loc) != 2 || loc[0] < 'a' || loc[0] > 'i' || loc[1] < '1' || loc[1] > '9' {
-			fmt.Print("Invalid location given. Please enter a location (a1-i9): ")
+			fmt.Printf("Invalid location. Please enter a location (%c%c-%c%c): ", minRow, minCol, maxRow, maxCol)
 			fmt.Scan(&loc)
 			continue
 		}
@@ -95,7 +110,7 @@ func DoUserMove(game *SuperBoard, allowed_square int) (int, int) {
 		if allowed_square != -1 {
 			square := RowColToCurrentBoardIdx(row, col)
 			if square != allowed_square {
-				fmt.Printf("That is in square #%d, but you must choose a location in square #%d.\n", square+1, allowed_square+1)
+				fmt.Printf("That is in square #%d. Please choose a location in square #%d.\n", square+1, allowed_square+1)
 				fmt.Print("Please enter a location (a1-i9): ")
 				fmt.Scan(&loc)
 				continue
