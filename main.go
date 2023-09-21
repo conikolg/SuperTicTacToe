@@ -123,7 +123,7 @@ func DoUserMove(game *SuperBoard, allowed_square int) (int, int) {
 		if allowed_square != -1 {
 			if square != allowed_square {
 				fmt.Printf("That is in square #%d. Please choose a location in square #%d.\n", square+1, allowed_square+1)
-				fmt.Print("Please enter a location (a1-i9): ")
+				fmt.Printf("Please enter a location (%c%c-%c%c): ", minRow, minCol, maxRow, maxCol)
 				fmt.Scan(&loc)
 				continue
 			}
@@ -132,7 +132,7 @@ func DoUserMove(game *SuperBoard, allowed_square int) (int, int) {
 		// must have chosen a square that is still in play
 		if game.GetBoard(square).winner != 0 {
 			fmt.Printf("Square #%d has already been completed, you cannot make any more moves there.", square+1)
-			fmt.Print("Please enter a location (a1-i9): ")
+			fmt.Printf("Please enter a location (%c%c-%c%c): ", minRow, minCol, maxRow, maxCol)
 			fmt.Scan(&loc)
 			continue
 		}
@@ -140,7 +140,8 @@ func DoUserMove(game *SuperBoard, allowed_square int) (int, int) {
 		// must have chosen an empty location
 		success := game.Set(row, col, 'X')
 		if !success {
-			fmt.Print("Chosen location is already filled.\nPlease enter a location (a1-i9): ")
+			fmt.Println("Chosen location is already filled.")
+			fmt.Printf("Please enter a location (%c%c-%c%c): ", minRow, minCol, maxRow, maxCol)
 			fmt.Scan(&loc)
 			continue
 		}
