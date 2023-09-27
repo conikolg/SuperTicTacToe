@@ -11,7 +11,19 @@ func main() {
 	var p1turn bool = true
 	var allowed_square int = -1
 	var row, col int
+	var difficulty string
 
+	// Ask player what difficulty they want
+	fmt.Print("Do you want to play on 'Easy' mode or 'Hard' mode? ")
+	fmt.Scan(&difficulty)
+	difficulty = strings.ToLower(difficulty)
+	for difficulty != "easy" && difficulty != "hard" {
+		fmt.Print("Invalid choice. Do you want to play on 'Easy' mode or 'Hard' mode? ")
+		fmt.Scan(&difficulty)
+		difficulty = strings.ToLower(difficulty)
+	}
+
+	// Start the game
 	for game.GetWinner() == 0 {
 		if p1turn {
 			// let player make a move
@@ -20,22 +32,10 @@ func main() {
 		} else {
 			fmt.Println("The computer is choosing a location...")
 
-			// Pick an available square, if needed
-			for allowed_square == -1 {
-				square := rand.Intn(9)
-				if game.GetBoard(square).winner == 0 {
-					allowed_square = square
-				}
-			}
-
-			// Pick a space in the square
-			minRow, minCol := allowed_square/3*3, allowed_square%3*3
-			row = rand.Intn(3) + minRow
-			col = rand.Intn(3) + minCol
-			// Retry as needed
-			for !game.Set(row, col, 'O') {
-				row = rand.Intn(3) + minRow
-				col = rand.Intn(3) + minCol
+			if difficulty == "easy" {
+				row, col = doBasicComputerMove(&game, allowed_square)
+			} else {
+				row, col = doAdvComputerMove(&game, allowed_square)
 			}
 
 			// Clear screen
@@ -149,5 +149,30 @@ func DoUserMove(game *SuperBoard, allowed_square int) (int, int) {
 		// return the move made
 		return row, col
 	}
+}
 
+func doBasicComputerMove(game *SuperBoard, allowed_square int) (int, int) {
+	// Pick an available square, if needed
+	for allowed_square == -1 {
+		square := rand.Intn(9)
+		if game.GetBoard(square).winner == 0 {
+			allowed_square = square
+		}
+	}
+
+	// Pick a space in the square
+	minRow, minCol := allowed_square/3*3, allowed_square%3*3
+	row := rand.Intn(3) + minRow
+	col := rand.Intn(3) + minCol
+	// Retry as needed
+	for !game.Set(row, col, 'O') {
+		row = rand.Intn(3) + minRow
+		col = rand.Intn(3) + minCol
+	}
+
+	return row, col
+}
+
+func doAdvComputerMove(game *SuperBoard, allowed_square int) (int, int) {
+	return doBasicComputerMove(game, allowed_square)
 }
